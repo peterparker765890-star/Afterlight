@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090b14">
+<title>AFTERLIGHT — A Quiet Place to Breathe</title>
+
+<style>
+:root {
+  --bg:#090b14;
+  --panel:#111525;
+  --text:#f2f1f8;
+  --muted:#a5a7ba;
+  --gold:#d8bd91;
+  --violet:#a99be8;
+  --line:rgba(255,255,255,.09);
+}
+
+* { box-sizing:border-box; }
+
+html { scroll-behavior:smooth; }
+
+body {
+  margin:0;
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(93,83,151,.19),transparent 38%),
+    radial-gradient(ellipse at 90% 30%,rgba(67,95,135,.13),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  line-height:1.65;
+}
+
+button,textarea,input { font:inherit; }
+a { color:inherit;text-decoration:none; }
+
+.stars {
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.35;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%,#fff 99%,transparent),
+    radial-gradient(1px 1px at 70% 12%,#fff 99%,transparent),
+    radial-gradient(1px 1px at 42% 65%,#fff 99%,transparent),
+    radial-gradient(1px 1px at 88% 78%,#fff 99%,transparent),
+    radial-gradient(1px 1px at 23% 88%,#fff 99%,transparent);
+  background-size:330px 290px;
+  z-index:-1;
+}
+
+nav {
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px clamp(18px,5vw,70px);
+  background:rgba(9,11,20,.85);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
+}
+
+.brand {
+  font-size:1rem;
+  letter-spacing:.28em;
+  font-weight:750;
+}
+
+.brand span { color:var(--gold); }
+
+.navlinks {
+  display:flex;
+  gap:22px;
+  color:var(--muted);
+  font-size:.86rem;
+}
+
+.navlinks a:hover { color:var(--gold); }
+
+.menu {
+  display:none;
+  background:none;
+  color:var(--text);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:7px 11px;
+}
+
+.hero {
+  min-height:86vh;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:90px 22px 75px;
+  position:relative;
+  overflow:hidden;
+}
+
+.moon {
+  width:86px;
+  height:86px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#fff4d9,#b8a9e6);
+  box-shadow:0 0 70px rgba(201,185,239,.28);
+  margin:0 auto 30px;
+  position:relative;
+}
+
+.moon:after {
+  content:"";
+  position:absolute;
+  width:78px;
+  height:78px;
+  border-radius:50%;
+  background:#0b0d18;
+  top:-9px;
+  left:22px;
+}
+
+.eyebrow {
+  color:var(--gold);
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  font-size:.72rem;
+  font-weight:700;
+}
+
+.hero h1 {
+  font-size:clamp(3.2rem,9vw,7rem);
+  letter-spacing:.12em;
+  line-height:1.05;
+  margin:10px 0 18px;
+  font-weight:500;
+}
+
+.hero h1 span { color:var(--gold); }
+
+.hero p {
+  max-width:620px;
+  color:#c0c1d0;
+  font-size:1.1rem;
+  margin:0 auto 30px;
+}
+
+.actions {
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.btn {
+  border:1px solid rgba(216,189,145,.5);
+  border-radius:999px;
+  padding:12px 22px;
+  background:linear-gradient(135deg,rgba(216,189,145,.18),rgba(169,155,232,.1));
+  color:var(--text);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.btn:hover {
+  transform:translateY(-2px);
+  background:rgba(216,189,145,.22);
+}
+
+.btn.secondary {
+  border-color:var(--line);
+  background:rgba(255,255,255,.035);
+  color:#d0d0dc;
+}
+
+.scrollhint {
+  position:absolute;
+  bottom:24px;
+  color:#777b91;
+  font-size:.75rem;
+  letter-spacing:.15em;
+}
+
+main {
+  max-width:1100px;
+  margin:auto;
+  padding:20px 22px 90px;
+}
+
+.intro {
+  text-align:center;
+  margin:25px auto 55px;
+  max-width:650px;
+}
+
+.intro h2,.section-head h2 {
+  font-size:clamp(1.8rem,4vw,2.7rem);
+  font-weight:500;
+  margin:8px 0;
+}
+
+.intro p,.section-head p {
+  color:var(--muted);
+  margin:0;
+}
+
+.section-head { margin:60px 0 22px; }
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:17px;
+}
+
+.card,.panel {
+  background:linear-gradient(145deg,rgba(21,27,45,.92),rgba(14,18,31,.94));
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 22px 70px rgba(0,0,0,.25);
+}
+
+.card h3 { font-weight:550;margin:8px 0; }
+
+.card p {
+  color:var(--muted);
+  margin:0 0 16px;
+  font-size:.94rem;
+}
+
+.icon { font-size:1.35rem; }
+
+.card-link { color:var(--gold);font-size:.88rem; }
+
+label {
+  display:block;
+  color:#d9d8e4;
+  font-size:.9rem;
+  margin:14px 0 7px;
+}
+
+textarea,input {
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#0b0f1c;
+  color:var(--text);
+  padding:14px;
+  outline:none;
+}
+
+textarea:focus,input:focus {
+  border-color:rgba(216,189,145,.65);
+}
+
+textarea { min-height:150px;resize:vertical; }
+
+.small-note {
+  font-size:.78rem;
+  color:#85899e;
+  margin-top:10px;
+}
+
+.row {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-top:14px;
+}
+
+.status {
+  color:var(--gold);
+  font-size:.85rem;
+  min-height:1.4em;
+}
+
+.moods {
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin:15px 0;
+}
+
+.mood {
+  border:1px solid var(--line);
+  background:#0b0f1c;
+  color:#d8d8e5;
+  border-radius:999px;
+  padding:9px 14px;
+  cursor:pointer;
+}
+
+.mood.active {
+  border-color:var(--gold);
+  background:rgba(216,189,145,.13);
+  color:#fff;
+}
+
+.quote {
+  font-family:Georgia,serif;
+  font-size:clamp(1.4rem,3vw,2rem);
+  line-height:1.45;
+  color:#e7e0f2;
+}
+
+.divider {
+  height:1px;
+  background:var(--line);
+  margin:22px 0;
+}
+
+.letter-list {
+  display:grid;
+  gap:10px;
+  margin-top:18px;
+}
+
+.letter-item {
+  padding:13px 15px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  color:#c6c6d4;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.delete {
+  background:none;
+  border:0;
+  color:#d99b9b;
+  cursor:pointer;
+}
+
+.breath {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:220px;
+}
+
+.breath-orb {
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#d9c9ef,#8176b8 65%,#46436f);
+  box-shadow:0 0 50px rgba(169,155,232,.25);
+  animation:breathe 8s ease-in-out infinite;
+}
+
+.breath-label {
+  margin-left:25px;
+  color:#c7c5d7;
+}
+
+@keyframes breathe {
+  0%,100% { transform:scale(.82);opacity:.75; }
+  50% { transform:scale(1.18);opacity:1; }
+}
+
+.footer {
+  text-align:center;
+  padding:35px 20px 55px;
+  color:#85899e;
+  border-top:1px solid var(--line);
+  font-size:.83rem;
+}
+
+.footer strong {
+  color:var(--gold);
+  font-weight:500;
+}
+
+@media(max-width:700px) {
+  .navlinks {
+    display:none;
+    position:absolute;
+    top:60px;
+    left:0;
+    right:0;
+    padding:18px 24px;
+    background:#0d1120;
+    border-bottom:1px solid var(--line);
+    flex-direction:column;
+    gap:13px;
+  }
+
+  .navlinks.open { display:flex; }
+  .menu { display:block; }
+  .grid { grid-template-columns:1fr; }
+  .hero { min-height:78vh; }
+
+  .breath { flex-direction:column; }
+
+  .breath-label {
+    margin:20px 0 0;
+    text-align:center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="stars"></div>
+
+<nav>
+  <a class="brand" href="#top">AFTER<span>LIGHT</span></a>
+  <button class="menu" id="menuBtn">☰</button>
+
+  <div class="navlinks" id="navlinks">
+    <a href="#spaces">Quiet spaces</a>
+    <a href="#journal">Journal</a>
+    <a href="#letters">Unsent letters</a>
+    <a href="#breathe">Breathe</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div>
+    <div class="moon"></div>
+    <div class="eyebrow">A quiet place to breathe</div>
+    <h1>AFTER<span>LIGHT</span></h1>
+
+    <p>
+      You don't have to be okay every moment.
+      You don't have to explain every feeling.
+      Take a breath. Start wherever you are.
+    </p>
+
+    <div class="actions">
+      <a class="btn" href="#journal">Let it out</a>
+      <a class="btn secondary" href="#breathe">Just breathe</a>
+    </div>
+  </div>
+
+  <div class="scrollhint">SCROLL GENTLY ↓</div>
+</header>
+
+<main>
+
+<section class="intro" id="spaces">
+  <div class="eyebrow">No pressure. No pretending.</div>
+  <h2>A little space for what you're carrying.</h2>
+  <p>
+    Choose what feels right today. You can write, reflect,
+    pause, or simply leave this page open for a while.
+  </p>
+</section>
+
+<section class="grid">
+
+  <article class="card">
+    <div class="icon">🌧️</div>
+    <h3>Let it out</h3>
+    <p>Put the tangled thoughts into words. They don't need to sound perfect.</p>
+    <a class="card-link" href="#journal">Open your journal →</a>
+  </article>
+
+  <article class="card">
+    <div class="icon">✉️</div>
+    <h3>Letters never sent</h3>
+    <p>Write what you wish you could say, without needing to send it.</p>
+    <a class="card-link" href="#letters">Write a letter →</a>
+  </article>
+
+  <article class="card">
+    <div class="icon">🪞</div>
+    <h3>A gentle check-in</h3>
+    <p>Name how today feels. There is no wrong answer and no score.</p>
+    <a class="card-link" href="#checkin">Check in with yourself →</a>
+  </article>
+
+  <article class="card">
+    <div class="icon">🌱</div>
+    <h3>One small thing</h3>
+    <p>You don't have to fix your whole life today. One small kind action is enough.</p>
+    <a class="card-link" href="#today">Find a small step →</a>
+  </article>
+
+</section>
+
+<section class="section-head" id="checkin">
+  <div class="eyebrow">01 / Check in</div>
+  <h2>What is the weather inside you?</h2>
+  <p>You can choose a feeling without having to justify it.</p>
+</section>
+
+<div class="panel">
+  <div class="moods">
+    <button class="mood" data-mood="Heavy">🌧️ Heavy</button>
+    <button class="mood" data-mood="Lonely">🌙 Lonely</button>
+    <button class="mood" data-mood="Overwhelmed">🌊 Overwhelmed</button>
+    <button class="mood" data-mood="Numb">☁️ Numb</button>
+    <button class="mood" data-mood="Hopeful">🌤️ Hopeful</button>
+    <button class="mood" data-mood="Not sure">✨ Not sure</button>
+  </div>
+
+  <div class="status" id="moodStatus"></div>
+
+  <p class="small-note">
+    Your feeling is information, not your identity.
+    It can change, even if it doesn't feel that way right now.
+  </p>
+</div>
+
+<section class="section-head" id="journal">
+  <div class="eyebrow">02 / The unspoken</div>
+  <h2>Write without being interrupted.</h2>
+  <p>This space is yours. No judgement, no perfect sentences.</p>
+</section>
+
+<div class="panel">
+  <label for="journalText">What's been weighing on your mind?</label>
+  <textarea id="journalText" placeholder="Start with: Today, I wish someone understood..."></textarea>
+
+  <div class="row">
+    <button class="btn" id="saveJournal">Save privately on this device</button>
+    <button class="btn secondary" id="clearJournal">Clear writing</button>
+    <span class="status" id="journalStatus"></span>
+  </div>
+
+  <p class="small-note">
+    Entries are stored in this browser's local storage.
+    They are not uploaded to GitHub. Anyone with access to this
+    browser or device may be able to see them. Avoid storing
+    passwords or highly sensitive information.
+  </p>
+</div>
+
+<section class="section-head" id="letters">
+  <div class="eyebrow">03 / Letters never sent</div>
+  <h2>Say what stayed inside.</h2>
+  <p>You can write to a person, a past version of yourself, or a feeling.</p>
+</section>
+
+<div class="panel">
+  <label for="letterTo">This letter is for…</label>
+  <input id="letterTo" placeholder="Someone, something, or my past self">
+
+  <label for="letterText">What do you wish you could say?</label>
+  <textarea id="letterText" placeholder="I never got to tell you..."></textarea>
+
+  <div class="row">
+    <button class="btn" id="saveLetter">Keep this letter here</button>
+    <span class="status" id="letterStatus"></span>
+  </div>
+
+  <div class="letter-list" id="letterList"></div>
+
+  <p class="small-note">
+    Letters are stored in this browser on this device.
+    They are not sent to anyone.
+  </p>
+</div>
+
+<section class="section-head" id="breathe">
+  <div class="eyebrow">04 / A moment to pause</div>
+  <h2>You can stay here for a minute.</h2>
+  <p>Follow the circle if it feels comfortable. Don't force your breathing.</p>
+</section>
+
+<div class="panel breath">
+  <div class="breath-orb"></div>
+
+  <div class="breath-label">
+    <strong>Slow and gentle.</strong><br>
+    Let your shoulders soften.<br>
+    Breathe naturally. There is no test.
+  </div>
+</div>
+
+<section class="section-head" id="today">
+  <div class="eyebrow">05 / One more day</div>
+  <h2>One small thing is still something.</h2>
+  <p>Choose just one. You do not need to complete a list to deserve rest.</p>
+</section>
+
+<div class="panel">
+  <p class="quote" id="dailyPrompt">
+    Drink a glass of water. Give yourself a moment.
+  </p>
+
+  <div class="row">
+    <button class="btn" id="nextPrompt">Another gentle idea</button>
+    <button class="btn secondary" id="donePrompt">I did this one</button>
+    <span class="status" id="taskStatus"></span>
+  </div>
+</div>
+
+<section class="section-head">
+  <div class="eyebrow">A note to keep</div>
+  <h2>You are more than this moment.</h2>
+</section>
+
+<div class="panel">
+  <div class="quote">
+    "You do not need to see the whole staircase.
+    Just give yourself permission to take the next gentle step."
+  </div>
+
+  <div class="divider"></div>
+
+  <p style="color:var(--muted);margin:0">
+    If things feel too heavy, consider reaching out to someone
+    you trust and telling them plainly:
+    "I'm having a hard time and I don't want to be alone with it."
+    You deserve support beyond a screen, too.
+  </p>
+</div>
+
+</main>
+
+<footer class="footer">
+  <strong>AFTERLIGHT</strong><br>
+  A quiet place to breathe. Built with care.<br>
+  <span style="font-size:.75rem">
+    Your feelings deserve room. You deserve support.
+  </span>
+</footer>
+
+<script>
+
+const $ = id => document.getElementById(id);
+
+// Navigation
+
+$('menuBtn').addEventListener('click', () => {
+  $('navlinks').classList.toggle('open');
+});
+
+document.querySelectorAll('.navlinks a').forEach(a => {
+  a.addEventListener('click', () => {
+    $('navlinks').classList.remove('open');
+  });
+});
+
+// Mood check-in
+
+document.querySelectorAll('.mood').forEach(btn => {
+  btn.addEventListener('click', () => {
+
+    document.querySelectorAll('.mood').forEach(b => {
+      b.classList.remove('active');
+    });
+
+    btn.classList.add('active');
+
+    $('moodStatus').textContent =
+      `You checked in as: ${btn.dataset.mood}. Thank you for being honest with yourself.`;
+
+  });
+});
+
+// Journal
+
+$('journalText').value =
+  localStorage.getItem('afterlight_journal') || '';
+
+$('saveJournal').addEventListener('click', () => {
+
+  localStorage.setItem(
+    'afterlight_journal',
+    $('journalText').value
+  );
+
+  $('journalStatus').textContent =
+    'Saved in this browser.';
+
+});
+
+$('clearJournal').addEventListener('click', () => {
+
+  if(confirm('Clear the writing in this box? This will not delete a previously saved entry.')) {
+
+    $('journalText').value = '';
+
+    $('journalStatus').textContent =
+      'Writing cleared from the box.';
+
+  }
+
+});
+
+// Unsent letters
+
+let letters = JSON.parse(
+  localStorage.getItem('afterlight_letters') || '[]'
+);
+
+function renderLetters() {
+
+  $('letterList').innerHTML = '';
+
+  letters.forEach((letter,index) => {
+
+    const item = document.createElement('div');
+    item.className = 'letter-item';
+
+    const label = document.createElement('span');
+
+    label.textContent =
+      `${letter.to} · ${letter.date}`;
+
+    const del = document.createElement('button');
+
+    del.className = 'delete';
+    del.textContent = 'Delete';
+
+    del.addEventListener('click', () => {
+
+      letters.splice(index,1);
+
+      localStorage.setItem(
+        'afterlight_letters',
+        JSON.stringify(letters)
+      );
+
+      renderLetters();
+
+    });
+
+    item.append(label,del);
+
+    $('letterList').append(item);
+
+  });
+
+}
+
+renderLetters();
+
+$('saveLetter').addEventListener('click', () => {
+
+  const to =
+    $('letterTo').value.trim() || 'An unsent letter';
+
+  const body =
+    $('letterText').value.trim();
+
+  if(!body) {
+
+    $('letterStatus').textContent =
+      'Write a few words first, if you want to.';
+
+    return;
+
+  }
+
+  letters.unshift({
+    to,
+    body,
+    date:new Date().toLocaleDateString()
+  });
+
+  localStorage.setItem(
+    'afterlight_letters',
+    JSON.stringify(letters)
+  );
+
+  $('letterTo').value = '';
+  $('letterText').value = '';
+
+  $('letterStatus').textContent =
+    'Your letter is kept on this device.';
+
+  renderLetters();
+
+});
+
+// Daily gentle activities
+
+const prompts = [
+
+  'Drink a glass of water. Give yourself a moment.',
+
+  'Step outside or look out of a window for two minutes.',
+
+  'Eat something nourishing if you have not eaten.',
+
+  'Send one honest message to someone you trust.',
+
+  'Wash your face or take a comfortable shower.',
+
+  'Put on a song that feels safe to listen to.',
+
+  'Rest for five minutes without demanding anything from yourself.',
+
+  'Write down one thing you made it through today.'
+
+];
+
+let promptIndex =
+  Math.floor(Math.random() * prompts.length);
+
+$('dailyPrompt').textContent =
+  prompts[promptIndex];
+
+$('nextPrompt').addEventListener('click', () => {
+
+  promptIndex =
+    (promptIndex + 1) % prompts.length;
+
+  $('dailyPrompt').textContent =
+    prompts[promptIndex];
+
+  $('taskStatus').textContent =
+    'Choose only what feels manageable.';
+
+});
+
+$('donePrompt').addEventListener('click', () => {
+
+  $('taskStatus').textContent =
+    'That counts. Be gentle with yourself.';
+
+});
+
+</script>
+
+</body>
+</html>
